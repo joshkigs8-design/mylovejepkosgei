@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Fixed: Added maximum-scale and user-scalable=no to prevent unwanted zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Valentine, Jepkosgei</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bright-red: #ff0000;
+            --rich-red: #990000;
+            --dark-bg: #4a0000;
+            --darker-bg: #2a0000;
+            --gold: #FFD700;
+            --white: #ffffff;
+        }
+
+        html, body {
+            /* Fixed: Disables double-tap zoom on mobile */
+            touch-action: manipulation; 
+            -webkit-text-size-adjust: 100%;
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            margin: 0;
+            overflow-x: hidden; /* Prevents horizontal scroll */
+            color: var(--white);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewport="0 0 24 24" fill="%23FFD700"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg>') 12 12, auto;
+            animation: breathe-bg 8s ease-in-out infinite;
+        }
+
+        @keyframes breathe-bg {
+            0% { background-color: var(--dark-bg); }
+            50% { background-color: var(--darker-bg); }
+            100% { background-color: var(--dark-bg); }
+        }
+
+        .handwritten { font-family: 'Dancing Script', cursive; }
+        .fancy-title { font-family: 'Great Vibes', cursive; }
+        .finale-font { font-family: 'Cinzel', serif; }
+
+        /* Landing Page Styles */
+        #landing-page {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: radial-gradient(circle, var(--rich-red) 0%, var(--dark-bg) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+
+        .pulse-heart {
+            font-size: 80px;
+            color: var(--bright-red);
+            animation: pulse 1.5s infinite;
+            cursor: pointer;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
+            transition: transform 0.3s;
+            -webkit-tap-highlight-color: transparent; /* Removes blue highlight on tap */
+        }
+        
+        .pulse-heart:hover { transform: scale(1.3); }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .reveal-btn {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            background: var(--gold);
+            color: var(--dark-bg);
+            font-weight: bold;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: float 3s ease-in-out infinite;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Main Menu Styles */
+        .menu-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .menu-grid { grid-template-columns: repeat(2, 1fr); max-width: 600px; }
+        }
+
+        .menu-card {
+            background: rgba(153, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(153, 0, 0, 0.6);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .menu-icon { font-size: 40px; margin-bottom: 10px; }
+        .menu-title { font-weight: bold; font-size: 1.2rem; color: var(--gold); }
+        .menu-desc { font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-top: 5px; }
+
+        /* Full Screen Section Styles */
+        .fullscreen-section {
+            position: fixed;
+            inset: 0;
+            background: rgba(40, 0, 0, 0.95);
+            z-index: 50;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .fullscreen-section.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Specific Content Styling */
+        .glass-box {
+            background: rgba(100, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Letter Specific Glow */
+        #letter-content {
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            padding: 10px 30px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--dark-bg);
+        }
+
+        /* Finale Button */
+        .finale-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(153, 0, 0, 0.4));
+            border: 2px solid var(--gold);
+        }
+
+        /* Animations */
+        .flower-petal {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            transform-origin: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .flower-petal:hover { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 15px var(--bright-red)); }
+        
+        .sway-1 { animation: sway 4s ease-in-out infinite alternate; transform-origin: bottom center; }
+        .sway-2 { animation: sway 5s ease-in-out infinite alternate-reverse; transform-origin: bottom center; }
+        .sway-3 { animation: sway 4.5s ease-in-out infinite alternate; transform-origin: bottom center; }
+        @keyframes sway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
+
+        /* Falling Elements */
+        .falling-item {
+            position: fixed;
+            top: -50px;
+            z-index: 5;
+            pointer-events: none;
+            animation: fall linear forwards;
+            font-size: 20px;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        /* Finale View */
+        #finale-view {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #fireworks-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        .sparkle-text {
+            background: linear-gradient(to right, #FFD700 20%, #FFF 40%, #FFD700 60%, #FFF 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 3s linear infinite, scaleUp 1s ease-out forwards;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            line-height: 1.4;
+            padding: 20px;
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes scaleUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Typewriter Cursor */
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: var(--gold);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LANDING ANIMATION PAGE -->
+    <div id="landing-page">
+        <div class="pulse-heart" onclick="revealGift()">❤️</div>
+        <h2 class="fancy-title text-5xl mt-6 text-white drop-shadow-md">For You, Jepkosgei</h2>
+        <p class="mt-4 text-sm uppercase tracking-widest text-yellow-200 animate-pulse">Tap the heart to open</p>
+        <button class="reveal-btn" onclick="revealGift()">My Valentine</button>
+    </div>
+
+    <!-- 2. MAIN MENU (REVEALED AFTER LANDING) -->
+    <div id="main-menu" class="menu-container" style="display: none;">
+        <header class="text-center mb-8">
+            <h1 class="fancy-title text-6xl text-red-500 mb-2 drop-shadow-lg" style="color: #ff3333;">Happy Valentine's Day</h1>
+            <p class="text-white tracking-wider text-sm mt-2 font-light uppercase">Tap an option to open</p>
+        </header>
+
+        <div class="menu-grid">
+            <div class="menu-card" onclick="openSection('letter')">
+                <div class="menu-icon">💌</div>
+                <div class="menu-title">My Letter</div>
+                <div class="menu-desc">Words from my heart</div>
+            </div>
+
+            <div class="menu-card" onclick="openSection('flowers')">
+                <div class="menu-icon">💐</div>
+                <div class="menu-title">Love Bouquet</div>
+                <div class="menu-desc">A garden for you</div>
+            </div>
+
+            <div class="menu-card" onclick="openSection('video')">
+                <div class="menu-icon">🎬</div>
+                <div class="menu-title">Our Song</div>
+                <div class="menu-desc">Listen with me</div>
+            </div>
+
+            <div class="menu-card finale-card" onclick="triggerFinale()">
+                <div class="menu-icon">🎁</div>
+                <div class="menu-title">One Final Surprise</div>
+                <div class="menu-desc">The most important part...</div>
+            </div>
+        </div>
+        
+        <footer class="mt-12 text-white/50 text-xs tracking-widest">MADE WITH LOVE FOR JEPKOSGEI</footer>
+    </div>
+
+    <!-- 3. FULL SCREEN SECTIONS -->
+    
+    <!-- LETTER SECTION -->
+    <div id="section-letter" class="fullscreen-section">
+        <div id="letter-content" class="glass-box">
+            <!-- Decorative corner elements -->
+            <div class="absolute top-4 left-4 text-4xl opacity-40 text-yellow-500">✨</div>
+            <div class="absolute bottom-4 right-4 text-4xl opacity-40 text-yellow-500">✨</div>
+            
+            <div class="max-w-prose mx-auto">
+                <div id="typewriter-container" class="handwritten text-3xl md:text-4xl text-white leading-loose text-center md:text-left drop-shadow-sm">
+                    <!-- Text typed via JS -->
+                </div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="closeSection('letter')">Back to Menu</button>
+    </div>
+
+    <!-- FLOWERS SECTION -->
+    <div id="section-flowers" class="fullscreen-section">
+        <div class="glass-box text-center">
+            <h2 class="fancy-title text-5xl text-red-400 mb-4" style="color: #ff3333;">A Garden of Love</h2>
+            <p class="text-white/80 text-sm mb-8">Tap the roses to reveal secret notes</p>
+            
+            <div class="relative h-[400px] flex flex-col items-center justify-center">
+                <svg viewBox="0 0 400 450" class="w-full max-w-[400px] h-full overflow-visible">
+                    <!-- Stems -->
+                    <g stroke="#2d5a27" stroke-width="3" fill="none" stroke-linecap="round">
+                        <path d="M200 400 Q200 320 140 240" class="sway-3" />
+                        <path d="M200 400 Q200 320 170 250" class="sway-1" />
+                        <path d="M200 400 Q200 300 200 200" class="sway-2" />
+                        <path d="M200 400 Q200 320 230 250" class="sway-1" />
+                        <path d="M200 400 Q200 320 260 240" class="sway-3" />
+                    </g>
+                    <!-- Flowers -->
+                    <g class="flower-petal sway-3" style="transform-box: fill-box;" onclick="revealMessage('Your smile is my sunrise.')">
+                        <circle cx="140" cy="240" r="20" fill="#cc0000" />
+                        <circle cx="140" cy="240" r="8" fill="#ffff00" />
+                    </g>
+                    <g class="flower-petal sway-1" style="transform-box: fill-box;" onclick="revealMessage('You are my safe place.')">
+                        <circle cx="170" cy="250" r="22" fill="#b30000" />
+                        <circle cx="170" cy="250" r="9" fill="#ffff00" />
+                    </g>
+                    <g class="flower-petal sway-2" style="transform-box: fill-box;" onclick="revealMessage('I love you endlessly.')">
+                        <circle cx="200" cy="200" r="28" fill="#ff1a1a" />
+                        <circle cx="200" cy="200" r="12" fill="#ffd700" />
+                    </g>
+                    <g class="flower-petal sway-1" style="transform-box: fill-box;" onclick="revealMessage('You make me better.')">
+                        <circle cx="230" cy="250" r="22" fill="#b30000" />
+                        <circle cx="230" cy="250" r="9" fill="#ffff00" />
+                    </g>
+                    <g class="flower-petal sway-3" style="transform-box: fill-box;" onclick="revealMessage('Forever is not enough time with you.')">
+                        <circle cx="260" cy="240" r="20" fill="#cc0000" />
+                        <circle cx="260" cy="240" r="8" fill="#ffff00" />
+                    </g>
+                </svg>
+
+                <div id="flower-message" class="mt-4 p-4 min-h-[60px] w-full max-w-md italic text-white text-xl transition-all duration-500 opacity-0 bg-red-900/80 rounded-xl border border-gold backdrop-blur-sm shadow-xl flex items-center justify-center">
+                    Click a flower...
+                </div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="closeSection('flowers')">Back to Menu</button>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div id="section-video" class="fullscreen-section">
+        <div class="glass-box flex flex-col items-center">
+            <h2 class="fancy-title text-5xl text-red-400 mb-6" style="color: #ff3333;">Our Song</h2>
+            <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-red-500/30">
+                <iframe 
+                    id="yt-player"
+                    class="w-full h-full"
+                    src="https://www.youtube.com/embed/xM1R05qHato?si=-c9uGewjUu0atmr7" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="mt-6 text-white/80 italic animate-pulse text-center">
+                "Baby, I'm dancing in the dark with you between my arms..."
+            </div>
+        </div>
+        <button class="back-btn" onclick="closeSection('video')">Back to Menu</button>
+    </div>
+
+    <!-- 4. FINALE VIEW -->
+    <div id="finale-view">
+        <canvas id="fireworks-canvas"></canvas>
+        <div class="sparkle-text finale-font text-4xl md:text-6xl font-bold p-8">
+            I LOVE YOU MORE<br>THAN WORDS CAN SAY
+        </div>
+        <button onclick="closeFinale()" class="mt-12 px-8 py-3 bg-transparent border border-yellow-500/50 text-yellow-500 rounded-full hover:bg-yellow-500 hover:text-black transition-all z-50 text-sm tracking-widest uppercase font-bold">
+            Back to Gift
+        </button>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const letterLines = [
+            "My Dearest Jepkosgei,", "",
+            "Happy Valentine's Day!", "",
+            "I wanted to take a moment just to tell you how incredible you are. You bring so much light, laughter, and warmth into my world.", "",
+            "Every moment we spend together becomes a favorite memory, and I am so grateful to have you by my side. You are beautiful, strong, and deeply loved.", "",
+            "Today isn't just about flowers or gifts; it's about celebrating the amazing person you are and the happiness you bring into my life.", "",
+            "Here is to us, to today, and to all the beautiful days still to come.", "",
+            "Forever yours,",
+            '<span class="text-red-400 text-5xl font-bold" style="color: #ff3333;">Josh</span>'
+        ];
+
+        // --- GLOBAL STATE ---
+        let typewriterIndex = 0;
+        let fireworksActive = false;
+        let animationFrameId;
+
+        // --- NAVIGATION LOGIC ---
+        function revealGift() {
+            const landing = document.getElementById('landing-page');
+            const menu = document.getElementById('main-menu');
+            
+            landing.style.opacity = '0';
+            setTimeout(() => {
+                landing.style.visibility = 'hidden';
+                menu.style.display = 'flex';
+                // Trigger reflow
+                void menu.offsetWidth;
+                menu.style.opacity = '1';
+                
+                startAmbientEffects();
+            }, 1000);
+        }
+
+        function openSection(id) {
+            const section = document.getElementById('section-' + id);
+            const menu = document.getElementById('main-menu');
+
+            // Hide menu
+            menu.style.opacity = '0';
+            setTimeout(() => {
+                menu.style.display = 'none';
+                
+                // Show section
+                section.style.display = 'flex';
+                void section.offsetWidth; // trigger reflow
+                section.style.opacity = '1';
+                section.classList.add('active');
+
+                // Special Actions
+                if(id === 'letter') {
+                    // Reset and start typewriter
+                    document.getElementById('typewriter-container').innerHTML = '';
+                    typewriterIndex = 0;
+                    typeLine();
+                }
+            }, 500);
+        }
+
+        function closeSection(id) {
+            const section = document.getElementById('section-' + id);
+            const menu = document.getElementById('main-menu');
+
+            section.style.opacity = '0';
+            setTimeout(() => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+                
+                menu.style.display = 'flex';
+                void menu.offsetWidth;
+                menu.style.opacity = '1';
+            }, 500);
+        }
+
+        // --- TYPEWRITER ---
+        function typeLine() {
+            if (typewriterIndex >= letterLines.length) return;
+            const container = document.getElementById('typewriter-container');
+            
+            const lineContent = letterLines[typewriterIndex];
+            const p = document.createElement('div');
+            p.style.minHeight = '1.5em';
+            p.style.opacity = '0';
+            p.style.transform = 'translateY(10px)';
+            p.style.transition = 'opacity 1s ease, transform 1s ease';
+            p.innerHTML = lineContent;
+            
+            container.appendChild(p);
+
+            setTimeout(() => {
+                p.style.opacity = '1';
+                p.style.transform = 'translateY(0)';
+            }, 50);
+
+            typewriterIndex++;
+            setTimeout(typeLine, 800);
+        }
+
+        // --- AMBIENT EFFECTS (Roses & Hearts) ---
+        function startAmbientEffects() {
+            // Spawn confetti/petals
+            setInterval(spawnFallingItem, 1500);
+            
+            // Spawn fairies
+            spawnFairy();
+            setInterval(spawnFairy, 8000);
+            
+            // Spawn trail logic
+            document.addEventListener('mousemove', (e) => createTrailDot(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => createTrailDot(e.touches[0].clientX, e.touches[0].clientY));
+        }
+
+        function spawnFallingItem() {
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            
+            // Mix of Roses and Hearts
+            const types = ['🌹', '❤️', '🌹', '💖', '✨'];
+            item.innerText = types[Math.floor(Math.random() * types.length)];
+            
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10s fall
+            item.style.fontSize = (Math.random() * 10 + 20) + 'px';
+            
+            document.body.appendChild(item);
+            setTimeout(() => item.remove(), 10000);
+        }
+
+        // --- FAIRY & TRAIL LOGIC ---
+        function spawnFairy() {
+            const fairy = document.createElement('div');
+            fairy.className = 'fairy';
+            fairy.innerHTML = Math.random() > 0.5 ? '🧚‍♀️' : '🧚';
+            const startY = Math.random() * (window.innerHeight - 100) + 50;
+            const direction = Math.random() > 0.5 ? 1 : -1;
+            
+            fairy.style.left = direction === 1 ? '-60px' : (window.innerWidth + 60) + 'px';
+            if(direction === -1) fairy.style.transform = 'scaleX(-1)';
+            fairy.style.top = startY + 'px';
+            
+            document.body.appendChild(fairy);
+
+            const duration = 8000;
+            const endX = direction === 1 ? window.innerWidth + 100 : -100;
+            const endY = startY + (Math.random() * 200 - 100);
+
+            const animation = fairy.animate([
+                { transform: `translate(0, 0) ${direction === -1 ? 'scaleX(-1)' : ''}` },
+                { transform: `translate(${endX - (direction === 1 ? -60 : window.innerWidth+60)}px, ${endY - startY}px) ${direction === -1 ? 'scaleX(-1)' : ''}` }
+            ], { duration: duration, easing: 'linear' });
+
+            const dustInterval = setInterval(() => {
+                const rect = fairy.getBoundingClientRect();
+                if (rect.left > 0 && rect.right < window.innerWidth) {
+                    createFairyDust(rect.left + rect.width/2, rect.top + rect.height/2);
+                }
+            }, 200);
+
+            animation.onfinish = () => {
+                clearInterval(dustInterval);
+                fairy.remove();
+            };
+        }
+
+        function createFairyDust(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'fairy-dust';
+            dust.innerHTML = Math.random() > 0.5 ? '✨' : '🔸';
+            dust.style.left = x + 'px';
+            dust.style.top = y + 'px';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 1000);
+        }
+
+        function createTrailDot(x, y) {
+            const dot = document.createElement('div');
+            dot.className = 'trail-dot';
+            dot.style.left = x + 'px';
+            dot.style.top = y + 'px';
+            document.body.appendChild(dot);
+            setTimeout(() => dot.remove(), 800);
+        }
+
+        // --- FLOWERS REVEAL ---
+        function revealMessage(msg) {
+            const box = document.getElementById('flower-message');
+            box.style.opacity = '0';
+            setTimeout(() => {
+                box.innerText = msg;
+                box.style.opacity = '1';
+                // Burst of hearts
+                for(let i=0; i<8; i++) spawnFallingItem(); 
+            }, 200);
+        }
+
+        // --- FINALE FIREWORKS ---
+        function triggerFinale() {
+            const menu = document.getElementById('main-menu');
+            const finale = document.getElementById('finale-view');
+
+            menu.style.opacity = '0';
+            setTimeout(() => {
+                menu.style.display = 'none';
+                finale.style.display = 'flex';
+                void finale.offsetWidth;
+                finale.style.opacity = '1';
+                
+                startFireworks();
+                // Intense rain
+                for(let i=0; i<50; i++) setTimeout(spawnFallingItem, i*50);
+            }, 500);
+        }
+
+        function closeFinale() {
+            const menu = document.getElementById('main-menu');
+            const finale = document.getElementById('finale-view');
+
+            finale.style.opacity = '0';
+            setTimeout(() => {
+                finale.style.display = 'none';
+                menu.style.display = 'flex';
+                void menu.offsetWidth;
+                menu.style.opacity = '1';
+                fireworksActive = false;
+            }, 500);
+        }
+
+        function startFireworks() {
+            const canvas = document.getElementById('fireworks-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            fireworksActive = true;
+            const particles = [];
+            
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x; this.y = y; this.color = color;
+                    this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
+                    this.alpha = 1; this.friction = 0.96; this.gravity = 0.04;
+                }
+                draw() {
+                    ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
+                }
+                update() {
+                    this.velocity.x *= this.friction; this.velocity.y *= this.friction;
+                    this.velocity.y += this.gravity; this.x += this.velocity.x; this.y += this.velocity.y;
+                    this.alpha -= 0.008; this.draw();
+                }
+            }
+
+            function animate() {
+                if (!fireworksActive) return;
+                animationFrameId = requestAnimationFrame(animate);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((p, i) => {
+                    if (p.alpha > 0) p.update(); else particles.splice(i, 1);
+                });
+                
+                if (Math.random() < 0.08) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height * 0.6;
+                    const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+                    for (let i = 0; i < 50; i++) particles.push(new Particle(x, y, color));
+                }
+            }
+            animate();
+        }
+
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('fireworks-canvas');
+            if(canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        });
+    </script>
+</body>
+</html>
